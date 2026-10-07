@@ -4,7 +4,7 @@
 
 No signup. No backend. One `index.html` file.
 
-## 📸 Screenshots
+##
 
 | Hero | Calculator + Result |
 |---|---|
