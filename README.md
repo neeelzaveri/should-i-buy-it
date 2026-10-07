@@ -8,7 +8,7 @@ No signup. No backend. One `index.html` file.
 
 | Hero | Calculator + Result |
 |---|---|
-| ![Hero ring](assets/hero.png) | ![App in action](assets/app.png) |
+| ![Hero ring](assets/hero.png) | ![App in action](assets/app.png)(assets/app2.png) |
 
 | Request a Feature | Disclaimer |
 |---|---|
