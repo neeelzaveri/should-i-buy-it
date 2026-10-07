@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Should I Buy It? — Indian Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#E86A2C;
+    --green:#1DB954;
+    --green-dark:#0E9E44;
+    --blue:#4A90D9;
+    --pink:#FF6B9D;
+    --yellow:#FFC93C;
+    --purple:#6C5CE7;
+    --ink:#1E1E1E;
+    --paper:#FFFDF7;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Baloo 2','Fredoka',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  /* floating dots like reference */
+  .dot{position:fixed;border-radius:50%;z-index:0;opacity:.9}
+  .dot.d1{width:22px;height:22px;background:var(--blue);left:6%;bottom:8%}
+  .dot.d2{width:14px;height:14px;background:var(--blue);right:8%;bottom:14%;opacity:.7}
+  .dot.d3{width:12px;height:12px;background:var(--green);left:12%;top:32%}
+  .dot.d4{width:14px;height:14px;background:var(--pink);right:12%;top:28%}
+  .dot.d5{width:12px;height:12px;background:var(--yellow);left:20%;bottom:22%}
+
+  header.topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 20px;max-width:1100px;margin:0 auto;
+    position:relative;z-index:2;
+  }
+  .logo{
+    font-weight:800;letter-spacing:.02em;line-height:1;
+    color:var(--green-dark);
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo-bubbles{display:flex;gap:2px}
+  .logo-bubbles span{
+    border:2.5px solid var(--green-dark);border-radius:10px;
+    padding:1px 6px;font-size:18px;background:#fff;
+    display:inline-block;transform:rotate(-2deg);
+  }
+  .logo-bubbles span:nth-child(even){transform:rotate(2deg)}
+  .pill{
+    font-size:13px;font-weight:700;background:#111;color:#fff;
+    padding:6px 14px;border-radius:999px;
+  }
+
+  /* HERO collage circle */
+  .hero{max-width:1100px;margin:0 auto;padding:10px 20px 0;text-align:center;position:relative;z-index:1}
+  .circle-stage{
+    position:relative;width:min(560px,92vw);height:min(560px,92vw);
+    margin:6px auto 0;
+  }
+  .ring{
+    position:absolute;inset:0;
+    animation:spin 90s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .item{
+    position:absolute;left:50%;top:50%;
+    font-size:clamp(28px,6vw,52px);
+    width:84px;height:84px;margin:-42px;
+    display:flex;align-items:center;justify-content:center;
+    background:#fff;border-radius:50%;
+    box-shadow:0 6px 0 rgba(0,0,0,.08);
+    border:3px solid transparent;
+  }
+  .item i{font-style:normal;transform:counter-rotate;display:block;animation:spinRev 90s linear infinite}
+  @keyframes spinRev{to{transform:rotate(-360deg)}}
+  .item.c-blue{background:#5AA0E6;border-color:#5AA0E6;color:#fff}
+  .item.c-pink{background:#FF8FB1;border-color:#111}
+  .item.c-purple{background:var(--purple);border-color:var(--purple)}
+  .item.c-orange{background:#FF7A3D;border-color:#111}
+  .item.c-yellow{background:var(--yellow);border-color:#111}
+  .item.c-green{background:#B8F169;border-color:#111}
+  .item.c-white{background:#fff;border-color:#111}
+  .item.small{width:52px;height:52px;margin:-26px;font-size:24px}
+
+  .center-copy{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:0 90px;
+    pointer-events:none;text-align:center;
+  }
+  .center-copy h1{
+    font-size:clamp(32px,6.5vw,56px);line-height:.95;font-weight:800;
+    color:var(--orange);
+  }
+  .center-copy p{
+    margin-top:10px;font-weight:700;font-size:clamp(14px,2.5vw,18px);
+    background:#111;color:#fff;padding:4px 14px;border-radius:999px;transform:rotate(-2deg)
+  }
+  .hindi{font-size:15px;margin-top:8px;color:#666;font-weight:600}
+
+  /* MAIN — two equal-height cards */
+  main{max-width:1080px;margin:28px auto 0;padding:0 24px 48px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;position:relative;z-index:2}
+  @media(max-width:860px){main{grid-template-columns:1fr;gap:24px}}
+
+  .card{
+    background:var(--card);border:3px solid #111;border-radius:22px;
+    padding:24px;box-shadow:8px 8px 0 #111;position:relative;
+    transform:none;display:flex;flex-direction:column;
+  }
+  .card.tilt-left,.card.tilt-right{transform:none}
+  .card h2{font-size:22px;line-height:1.2;margin-bottom:4px}
+  .card h2 .emoji{margin-right:6px}
+  .sub{color:#666;font-weight:600;font-size:14px;margin-bottom:12px;line-height:1.45}
+
+  label{font-weight:800;font-size:14px;display:block;margin:12px 0 6px}
+  label small{font-weight:600;color:#777}
+  input[type=text],input[type=number]{
+    width:100%;padding:13px 14px;border:2.5px solid #111;border-radius:14px;
+    font-family:inherit;font-weight:700;font-size:16px;background:#FFFEFB;outline:none;
+  }
+  input:focus{border-color:var(--orange);box-shadow:3px 3px 0 var(--orange)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.row2{grid-template-columns:1fr}}
+
+  .seg{display:flex;background:#F1EFE9;border:2.5px solid #111;border-radius:999px;padding:4px;gap:4px;margin-top:6px}
+  .seg button{
+    flex:1;border:0;border-radius:999px;padding:9px;font-family:inherit;
+    font-weight:800;font-size:14px;cursor:pointer;background:transparent;
+  }
+  .seg button.active{background:#111;color:#fff}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .chip{
+    border:2px solid #111;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;
+    background:#fff;cursor:pointer;box-shadow:2px 2px 0 #111;transition:.15s;
+  }
+  .chip:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #111;background:var(--yellow)}
+
+  .calc-btn{
+    width:100%;margin-top:18px;border:3px solid #111;border-radius:16px;
+    padding:15px;font-family:inherit;font-weight:800;font-size:19px;cursor:pointer;
+    background:var(--green);color:#fff;box-shadow:5px 5px 0 #111;transition:.15s;
+  }
+  .calc-btn:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
+  .calc-btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}
+
+  /* RESULT */
+  .result-empty{text-align:center;padding:30px 10px;color:#777}
+  .result-empty .big{font-size:64px}
+  .big-number{
+    text-align:center;background:#111;color:#fff;border-radius:18px;padding:18px 12px;margin:12px 0;
+  }
+  .big-number .hrs{font-size:clamp(44px,8vw,68px);font-weight:800;line-height:1;color:var(--yellow)}
+  .big-number .lbl{font-weight:700;letter-spacing:.04em}
+  .verdict{
+    border-radius:14px;padding:12px 14px;font-weight:700;margin:12px 0;line-height:1.35;
+    border:2.5px dashed #111;
+  }
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0}
+  .stat{background:#F7F3E9;border:2px solid #111;border-radius:14px;padding:10px;text-align:center}
+  .stat b{display:block;font-size:20px}
+  .stat span{font-size:12px;font-weight:700;color:#666}
+  .bar-wrap{background:#EEE;border:2px solid #111;border-radius:999px;height:18px;overflow:hidden;margin:8px 0}
+  .bar{height:100%;background:linear-gradient(90deg,var(--green),var(--yellow),var(--orange));width:0%;transition:width .8s cubic-bezier(.2,.9,.2,1)}
+  .equiv{background:#FFF6D6;border:2px solid #111;border-radius:14px;padding:12px;font-weight:600;font-size:14px;line-height:1.6}
+  .actions{display:flex;gap:10px;margin-top:14px}
+  .btn2{flex:1;border:2.5px solid #111;border-radius:12px;padding:10px;font-family:inherit;font-weight:800;cursor:pointer;background:#fff;box-shadow:3px 3px 0 #111}
+  .btn2.green{background:#25D366}
+  .btn2:active{transform:translate(2px,2px);box-shadow:0 0 0 #111}
+
+  .history{margin-top:16px;display:flex;flex-direction:column;min-height:0}
+  .history h3{font-size:15px;margin-bottom:8px}
+  #histList{max-height:230px;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:#111 #F1EFE9}
+  #histList::-webkit-scrollbar{width:8px}
+  #histList::-webkit-scrollbar-track{background:#F1EFE9;border-radius:999px}
+  #histList::-webkit-scrollbar-thumb{background:#111;border-radius:999px}
+  .hist-item{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;background:#fff;border:2px solid #111;border-radius:12px;padding:8px 12px;margin-bottom:8px;font-weight:700;font-size:14px}
+  .hist-item button{border:0;background:#111;color:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;font-family:inherit;font-weight:700}
+
+  footer{background:var(--green-dark);color:#fff;text-align:center;padding:14px;font-weight:600;font-size:13px;margin-top:10px}
+  .sticker{
+    position:absolute;top:-16px;right:18px;background:var(--pink);color:#fff;
+    border:2.5px solid #111;border-radius:999px;padding:4px 14px;font-weight:800;
+    transform:rotate(6deg);box-shadow:3px 3px 0 #111;font-size:14px;
+  }
+</style>
+</head>
+<body>
+<div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div><div class="dot d5"></div>
+
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-bubbles"><span>SHOULD</span><span>I</span><span>BUY</span><span>IT?</span></div>
+  </div>
+  <div class="pill">🇮🇳 Indian Edition • ₹</div>
+</header>
+
+<div class="hero">
+  <div class="circle-stage" id="circle">
+    <div class="center-copy" id="centerCopy">
+      <h1>Everything<br>and<br>Anything</h1>
+      <p>⏰ IT'S TIME TO HISAB!</p>
+      <div class="hindi">product daalo, price daalo — kitne ghante kaam karna padega?</div>
+    </div>
+  </div>
+</div>
+
+<main style="margin-top:20px">
+  <!-- LEFT : INPUT -->
+  <section class="card">
+    <div class="sticker">PAISA • VASOOL? 🤔</div>
+    <h2><span class="emoji">🛒</span> Kya lena hai?</h2>
+    <div class="sub">Enter product & price, apni salary batao — hum ghante nikaalte hain.</div>
+
+    <label>Product ka naam</label>
+    <input id="product" type="text" placeholder="e.g. iPhone 16, Royal Enfield, Sneakers…" value="iPhone 16" />
+
+    <label>Price (₹)</label>
+    <input id="price" type="number" min="1" placeholder="e.g. 79900" value="79900" />
+
+    <div class="chips" id="presets"></div>
+
+    <label style="margin-top:18px">Salary input mode</label>
+    <div class="seg">
+      <button id="modeMonthly" class="active">💼 Monthly salary</button>
+      <button id="modeHourly">⏱️ Hourly rate</button>
+    </div>
+
+    <div id="monthlyBox">
+      <div class="row2">
+        <div>
+          <label>In-hand monthly salary (₹) <small>• avg India ₹25-40k</small></label>
+          <input id="salary" type="number" value="35000" min="1" />
+        </div>
+        <div>
+          <label>Hours per day <small>• mostly 8-10</small></label>
+          <input id="hrsPerDay" type="number" value="9" min="1" max="16" />
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label>Work days / month <small>• 26 = 6-day week</small></label>
+          <input id="daysPerMonth" type="number" value="26" min="1" max="31" />
+        </div>
+        <div>
+          <label>Savings % <small>• kitna bacha paate ho?</small></label>
+          <input id="savePct" type="number" value="30" min="5" max="100" />
+        </div>
+      </div>
+    </div>
+
+    <div id="hourlyBox" style="display:none">
+      <label>Hourly wage (₹ / hour) <small>• Zomato ~₹60, fresher ~₹150-250</small></label>
+      <input id="hourly" type="number" value="150" min="1" />
+      <label style="margin-top:12px">Savings % <small>• kitna bacha paate ho?</small></label>
+      <input id="savePct2" type="number" value="100" min="5" max="100" />
+    </div>
+
+    <button class="calc-btn" id="calcBtn">Calculate ⏱️ Kitne Ghante?</button>
+    <div class="sub bottom-note" style="margin-top:auto;padding-top:12px;text-align:center;margin-bottom:0">No signup • 100% free • data stays in your browser</div>
+  </section>
+
+  <!-- RIGHT : RESULT -->
+  <section class="card">
+    <h2><span class="emoji">⌚</span> Hisab-kitab</h2>
+    <div class="sub" id="resultSub">Result yahan aayega — taiyaar ho jao sach sunne ke liye 😅</div>
+
+    <div id="emptyState" class="result-empty">
+      <div class="big">🛵☕📱👟⏰</div>
+      <b style="color:#111">Abhi kuch calculate nahi kiya</b><br>
+      Left side me price daalo aur button dabao 👈
+    </div>
+
+    <div id="resultBox" style="display:none">
+      <div class="big-number">
+        <div class="lbl" id="rProduct">iPhone 16 • ₹79,900</div>
+        <div class="hrs" id="rHours">512 hrs</div>
+        <div class="lbl" id="rDays">≈ 57 work-days • 2.2 months</div>
+      </div>
+
+      <div class="verdict" id="rVerdict"></div>
+
+      <div class="stats">
+        <div class="stat"><b id="sHours">–</b><span>work hours</span></div>
+        <div class="stat"><b id="sDays">–</b><span>work days</span></div>
+        <div class="stat"><b id="sRate">–</b><span>₹ / hour</span></div>
+      </div>
+
+      <label style="margin:6px 0 2px">Monthly salary ka kitna %? 😭</label>
+      <div class="bar-wrap"><div class="bar" id="salaryBar"></div></div>
+      <div class="sub" id="salaryPctTxt" style="margin:0"></div>
+
+      <label style="margin:12px 0 6px">Is paise me aur kya aa sakta tha? 👀</label>
+      <div class="equiv" id="rEquiv"></div>
+
+      <div class="actions">
+        <button class="btn2 green" id="waBtn">Share on WhatsApp 🟢</button>
+        <button class="btn2" id="copyBtn">Copy 📋</button>
+      </div>
+
+      <div class="history">
+        <h3>🕘 Recent hisab</h3>
+        <div id="histList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 Should I Buy It? — Made for India 🇮🇳 • Chai se iPhone tak, sabka hisab • Mfd. 2026</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmtIN = n => '₹' + Number(Math.round(n)).toLocaleString('en-IN');
+
+// --- rotating collage ring (matches reference images) ---
+const emojis = [
+  {e:'🪑', c:'c-white', s:''}, {e:'☕', c:'c-white', s:''},
+  {e:'🎧', c:'c-orange', s:''}, {e:'🎒', c:'c-yellow', s:''},
+  {e:'💄', c:'c-pink', s:'small'}, {e:'👒', c:'c-green', s:'small'},
+  {e:'📿', c:'c-purple', s:''}, {e:'🕶️', c:'c-white', s:'small'},
+  {e:'👕', c:'c-blue', s:'small'}, {e:'🐶', c:'c-white', s:''},
+  {e:'🧦', c:'c-pink', s:'small'}, {e:'🎾', c:'c-yellow', s:'small'},
+  {e:'👟', c:'c-white', s:''}, {e:'👜', c:'c-green', s:''},
+  {e:'💄', c:'c-orange', s:'small'}, {e:'📦', c:'c-white', s:'small'},
+  {e:'🫖', c:'c-white', s:''}, {e:'💡', c:'c-blue', s:''},
+  {e:'👜', c:'c-white', s:'small'}, {e:'🪑', c:'c-white', s:'small'},
+];
+(function buildRing(){
+  const stage = $('circle');
+  const N = emojis.length;
+  const R = stage.clientWidth/2 - 46 || 230;
+  emojis.forEach((o,i)=>{
+    const a = (i/N)*Math.PI*2 - Math.PI/2;
+    const x = Math.cos(a)*R, y = Math.sin(a)*R;
+    const d = document.createElement('div');
+    d.className = 'item '+o.c+' '+o.s;
+    d.style.transform = `translate(${x}px, ${y}px)`;
+    d.innerHTML = `<i>${o.e}</i>`;
+    const ring = stage.querySelector('.ring') || (()=>{const r=document.createElement('div');r.className='ring';stage.prepend(r);return r;})();
+    ring.appendChild(d);
+  });
+  // reposition on resize simply by reload of positions
+  window.addEventListener('resize', ()=>{ /* keep simple, CSS scales */ });
+})();
+
+// --- presets (Indian) ---
+const presets = [
+  {n:'Cutting Chai ☕', p:15},
+  {n:'Vada Pav 🍔', p:25},
+  {n:'Metro Recharge 🚇', p:500},
+  {n:'Sneakers 👟', p:2999},
+  {n:'Boat Headphones 🎧', p:1999},
+  {n:'iPhone 16 📱', p:79900},
+  {n:'Royal Enfield 🏍️', p:193000},
+  {n:'MacBook Air 💻', p:114900},
+  {n:'Gold 10g 🪙', p:72000},
+  {n:'Goa Trip ✈️', p:30000},
+];
+const presetBox = $('presets');
+presets.forEach(o=>{
+  const b=document.createElement('button');
+  b.className='chip';b.textContent=`${o.n} • ₹${o.p.toLocaleString('en-IN')}`;
+  b.onclick=()=>{ $('product').value=o.n; $('price').value=o.p; calculate(); window.scrollTo({top:document.querySelector('main').offsetTop-10,behavior:'smooth'}); };
+  presetBox.appendChild(b);
+});
+
+// --- mode toggle ---
+let mode='monthly';
+$('modeMonthly').onclick=()=>{mode='monthly';$('modeMonthly').classList.add('active');$('modeHourly').classList.remove('active');$('monthlyBox').style.display='block';$('hourlyBox').style.display='none';};
+$('modeHourly').onclick=()=>{mode='hourly';$('modeHourly').classList.add('active');$('modeMonthly').classList.remove('active');$('monthlyBox').style.display='none';$('hourlyBox').style.display='block';};
+
+function verdict(hours, days, price, salary){
+  const ratio = salary? price/salary : 2;
+  if(hours < 2) return `🟢 <b>LE LE LE! Full paisa-vasool.</b> Sirf ${hours.toFixed(1)} ghante ka kaam hai. Ek cutting chai se bhi kam sochna — <b>BUY IT!</b>`;
+  if(hours < 8) return `🟢 <b>Go for it, boss!</b> Ek work-day se kam me afford ho jayega (${hours.toFixed(1)} hrs). Treat yourself, tum deserve karte ho.`;
+  if(days < 3) return `🟡 <b>Socho, phir lo.</b> ${days.toFixed(1)} din ka paseena hai. Agar 30 din baad bhi chahiye lage, tab lo — impulse nahi!`;
+  if(ratio < 1) return `🟡 <b>Hmm, ek mahine ki salary ke andar hai</b> (${days.toFixed(0)} work-days). EMI pe mat jao, thoda save karke cash me lo.`;
+  if(ratio < 3) return `🟠 <b>Bhai, ${ratio.toFixed(1)} mahine ki salary hai!</b> ${days.toFixed(0)} din kaam karna padega. SIP me daalte to aur badhta. Sirf tab lo agar <b>really</b> need hai.`;
+  return `🔴 <b>RUK JAO! ${ratio.toFixed(1)} mahine ki salary! 😭</b> ${Math.round(hours).toLocaleString('en-IN')} ghante = ${days.toFixed(0)} din kaam. Pehle emergency fund banao, phir sapne dekho.`;
+}
+
+function equivalents(price){
+  const items=[
+    {n:'cutting chai ☕ (₹15)', v:price/15},
+    {n:'vada pav 🍔 (₹25)', v:price/25},
+    {n:'auto rides 5km 🛺 (₹120)', v:price/120},
+    {n:'movie + popcorn 🎬 (₹500)', v:price/500},
+    {n:'1BHK rent days 🏠 (₹500/day)', v:price/500},
+  ];
+  return `Isme mil sakte the: <b>${Math.floor(items[0].v).toLocaleString('en-IN')}</b> ${items[0].n} <b>OR</b> <b>${Math.floor(items[1].v).toLocaleString('en-IN')}</b> ${items[1].n} <b>OR</b> <b>${Math.floor(items[2].v).toLocaleString('en-IN')}</b> ${items[2].n}.<br>Soch lo — <b>experience ya cheez?</b> 👀`;
+}
+
+function calculate(){
+  const product = ($('product').value||'Ye product').trim();
+  const price = Math.max(1, Number($('price').value||0));
+  if(!price){alert('Price daalo yaar!');return;}
+
+  let hourlyRate, salary=0, hrsPerDay=8, savePct=100;
+  if(mode==='monthly'){
+    salary = Math.max(1, Number($('salary').value||1));
+    hrsPerDay = Math.max(1, Number($('hrsPerDay').value||8));
+    const dpm = Math.max(1, Number($('daysPerMonth').value||26));
+    savePct = Math.min(100, Math.max(5, Number($('savePct').value||30)));
+    hourlyRate = salary / (dpm * hrsPerDay);
+  } else {
+    hourlyRate = Math.max(1, Number($('hourly').value||1));
+    savePct = Math.min(100, Math.max(5, Number($('savePct2').value||100)));
+    salary = hourlyRate * 9 * 26;
+    hrsPerDay = 9;
+  }
+  const effectiveRate = hourlyRate * (savePct/100);
+  const hours = price / effectiveRate;
+  const days = hours / hrsPerDay;
+  const months = salary ? price / (salary*(savePct/100)) : days/26;
+
+  $('emptyState').style.display='none';
+  $('resultBox').style.display='block';
+  $('resultSub').textContent = `"${product}" ka poora sach 👇`;
+  $('rProduct').textContent = `${product} • ${fmtIN(price)}`;
+  $('rHours').textContent = hours>=1000 ? `${Math.round(hours).toLocaleString('en-IN')} hrs` : `${hours.toFixed(1)} hrs`;
+  $('rDays').textContent = `≈ ${days>=100?Math.round(days).toLocaleString('en-IN'):days.toFixed(1)} work-days • ${months<1?(months*30).toFixed(0)+' din ki savings':months.toFixed(1)+' months savings'} • @ ${fmtIN(hourlyRate)}/hr`;
+  $('rVerdict').innerHTML = verdict(hours, days, price, salary*(savePct/100));
+  $('sHours').textContent = Math.round(hours).toLocaleString('en-IN');
+  $('sDays').textContent = days>=100?Math.round(days).toLocaleString('en-IN'):days.toFixed(1);
+  $('sRate').textContent = fmtIN(hourlyRate);
+  $('rEquiv').innerHTML = equivalents(price);
+
+  const pct = salary ? Math.min(100, (price/salary)*100) : Math.min(100, hours/2);
+  requestAnimationFrame(()=>{ $('salaryBar').style.width = Math.max(4,pct)+'%'; });
+  $('salaryPctTxt').textContent = salary ? `Ye ${((price/salary)*100).toFixed(0)}% of one month salary hai (${(price/salary).toFixed(1)} months). Savings rate ${savePct}% pe hisab kiya gaya.` : '';
+
+  // history
+  const entry = {product, price, hours: Math.round(hours)};
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem('sibi_hist')||'[]'); }catch(e){}
+  hist.unshift(entry); hist = hist.slice(0,5);
+  try{ localStorage.setItem('sibi_hist', JSON.stringify(hist)); }catch(e){}
+  renderHist(hist);
+
+  // share
+  const txt = `🤔 Should I Buy It?\n${product} — ${fmtIN(price)}\n⏱️ ${Math.round(hours).toLocaleString('en-IN')} ghante kaam (${days.toFixed(1)} days)\n💰 Meri rate: ${fmtIN(hourlyRate)}/hr\n${price>salary?'🔴 Mehenga hai, soch ke lo!':'🟢 Affordable hai!'}\n— via Should I Buy It? India`;
+  $('waBtn').onclick = ()=> window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+  $('copyBtn').onclick = async ()=>{ try{ await navigator.clipboard.writeText(txt); $('copyBtn').textContent='Copied ✅'; setTimeout(()=>$('copyBtn').textContent='Copy 📋',1500);}catch(e){alert(txt);} };
+}
+
+function renderHist(hist){
+  const box=$('histList'); box.innerHTML='';
+  if(!hist.length){box.innerHTML='<div class="sub">Koi history nahi — pehla hisab karo!</div>';return;}
+  hist.forEach(h=>{
+    const d=document.createElement('div');d.className='hist-item';
+    d.innerHTML=`<span>${h.product} • ${fmtIN(h.price)}</span><span>${h.hours.toLocaleString('en-IN')} hrs</span>`;
+    const b=document.createElement('button');b.textContent='↩';b.title='Load';
+    b.onclick=()=>{ $('product').value=h.product; $('price').value=h.price; calculate(); };
+    d.appendChild(b); box.appendChild(d);
+  });
+}
+(function initHist(){ try{ renderHist(JSON.parse(localStorage.getItem('sibi_hist')||'[]')); }catch(e){} })();
+
+$('calcBtn').onclick = calculate;
+['product','price','salary','hrsPerDay','daysPerMonth','savePct','hourly','savePct2'].forEach(id=>{
+  $(id).addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
+});
+// auto-calc on load for demo
+calculate();
+</script>
+</body>
+</html>
